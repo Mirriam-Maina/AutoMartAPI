@@ -1,0 +1,46 @@
+{
+  "name": "automart",
+  "version": "1.0.0",
+  "description": "A car sales API",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon './index.js' localhost 5000",
+    "test": "npm test",
+    "create-tables": "node database/createtables.js",
+    "drop-tables": "node database/droptables.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mirriam-Maina/AutoMartAPI.git"
+  },
+  "author": "Mirriam-Maina",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mirriam-Maina/AutoMartAPI/issues"
+  },
+  "homepage": "https://github.com/Mirriam-Maina/AutoMartAPI#readme",
+  "dependencies": {
+    "@babel/runtime": "^7.4.5",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "object.omit": "^3.0.0",
+    "password-hash": "^1.2.2",
+    "pg": "^7.11.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/register": "^7.4.4",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-register": "^6.26.0"
+  }
+}
