@@ -4,8 +4,10 @@
   "description": "A car sales API",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon './app.js' localhost 5000",
-    "test": "npm test"
+    "start": "nodemon './index.js' localhost 5000",
+    "test": "npm test",
+    "create-tables": "node database/createtables.js",
+    "drop-tables": "node database/droptables.js"
   },
   "repository": {
     "type": "git",
