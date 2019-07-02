@@ -1,4 +1,5 @@
-const pool = require('./config')
+const pool = require('./config');
+
 const createAll = `CREATE TABLE IF NOT EXISTS users(
     id SERIAL PRIMARY KEY,
     firstName VARCHAR(100) NOT NULL,

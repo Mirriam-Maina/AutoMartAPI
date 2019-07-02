@@ -1,18 +1,25 @@
 import AuthValidation from '../../middleware/AuthValidation'; 
-
+import User from '../../models/auth';
 
 const jwt = require('jsonwebtoken');
+const omit = require('object.omit');
 
 export default class AuthController {
     static async signup(req, res){
-        const users = [];
-        const { email, firstName, lastName } = req.body;
+        const { email, firstName, lastName, password, address } = req.body;
         let jwtToken = signToken({email, firstName, lastName});
-        users.push(req.body);
+        let newUser = new User(firstName, lastName, email, password, address);
+        let createdUser = await newUser.addUser()
+        if (createdUser === 'User exists'){
+            return res.status(409).json({
+            status: 409,
+            message: "This user already exists. Log in instead",
+        })
+        }
         return res.status(201).json({
             status: 201,
             message: "User successfully created",
-            data: users[users.length-1],
+            data: omit(createdUser, 'password'),
             token: jwtToken
         })
     }
