@@ -6,8 +6,14 @@ const AuthControllerRouter = express.Router();
 
 AuthControllerRouter.post(
     '/auth/signup',
-    AuthValidation.signInValidation,
+    AuthValidation.signUpValidation,
     AuthController.signup
+)
+
+AuthControllerRouter.post(
+    '/auth/login',
+    AuthValidation.signInValidation,
+    AuthController.signin
 )
 
 
