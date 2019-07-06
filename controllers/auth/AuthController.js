@@ -1,13 +1,13 @@
-import AuthValidation from '../../middleware/AuthValidation'; 
 import User from '../../models/auth';
+import middleware from '../../middleware';
 
-const jwt = require('jsonwebtoken');
+const { Authenticate } = middleware;
 const omit = require('object.omit');
 
 export default class AuthController {
     static async signup(req, res){
         const { email, firstName, lastName, password, address } = req.body;
-        let jwtToken = signToken({email, firstName, lastName});
+        let jwtToken = Authenticate.signToken({email});
         let newUser = new User(firstName, lastName, email, password, address);
         let createdUser = await newUser.addUser();
         return res.status(201).json({
@@ -21,8 +21,7 @@ export default class AuthController {
     static async signin(req, res){
         const { email, password } = req.body;
         let signInUser = await User.signInUser(email, password)
-        let jwtToken = signToken({email});
-        console.log(signInUser)
+        let jwtToken = Authenticate.signToken({email});
         if (signInUser){
             return res.status(200).json({
                 status: 200,
@@ -40,11 +39,3 @@ export default class AuthController {
     }
 }
 
-
-const signToken = (payload) => {
-    let token = jwt.sign({
-        exp: Math.floor(Date.now() / 1000) + (60 * 60),
-        data: payload
-      }, 'secret');
-    return token;
-}

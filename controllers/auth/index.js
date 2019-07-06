@@ -1,7 +1,8 @@
 import express from 'express';
 import AuthController from './AuthController';
-import AuthValidation from '../../middleware/AuthValidation';
+import middleware from '../../middleware';
 
+const { AuthValidation } = middleware;
 const AuthControllerRouter = express.Router();
 
 AuthControllerRouter.post(
