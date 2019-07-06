@@ -1,10 +1,12 @@
-import AuthControllerRouter from '../controllers/auth/index';
+import AuthControllerRouter from '../controllers/auth';
+import CarControllerRouter from '../controllers/cars';
 
 
 const apiPrefix = '/api/v1';
 
 const routes = [
-AuthControllerRouter
+AuthControllerRouter,
+CarControllerRouter
 ];
 
 export default (app) => {

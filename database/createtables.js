@@ -11,15 +11,16 @@ const createAll = `CREATE TABLE IF NOT EXISTS users(
   );
 CREATE TABLE IF NOT EXISTS cars(
   id SERIAL PRIMARY KEY,
-  owner INT REFERENCES users(id) ON DELETE CASCADE,
-  state VARCHAR(5) NOT NULL,
-  status VARCHAR(20) NOT NULL,
-  price INT NOT NULL,
-  manufacturer VARCHAR(20) NOT NULL,
+  registrationPlate VARCHAR(30) NOT NULL,
   model VARCHAR(20) NOT NULL,
-  body_type VARCHAR(20) NOT NULL,
-  created_on TIMESTAMP                    
+  manufacturer VARCHAR(20) NOT NULL,
+  state VARCHAR(5) NOT NULL,
+  price INT NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'available',
+  owner VARCHAR REFERENCES users(email) ON DELETE CASCADE,
+  createdOn TIMESTAMP                    
 );
+
 CREATE TABLE IF NOT EXISTS orders(
   id SERIAL PRIMARY KEY,
   buyer INT REFERENCES users(id) ON DELETE CASCADE,
