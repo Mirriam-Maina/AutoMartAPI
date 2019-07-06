@@ -15,5 +15,11 @@ export default class Car{
             const createdCar = await pool.query(createCarQuery, [this.registrationPlate, this.model, this.manufacturer, this.state, this.price, this.owner]);
             return createdCar.rows[0];
         }
+
+    static async getAllCars(){
+        const allCarsQuery = `SELECT * FROM Cars`;
+        const allCars = await pool.query(allCarsQuery);
+        return allCars.rows;
+    }
 }
 
