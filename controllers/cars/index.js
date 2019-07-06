@@ -12,5 +12,10 @@ CarControllerRouter.post(
     CarController.createCarAd
 )
 
+CarControllerRouter.get(
+    '/car',
+    CarsValidation.getAllCars,
+    CarController.getAllCars
+)
 
 export default CarControllerRouter;

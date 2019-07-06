@@ -7,9 +7,9 @@ const omit = require('object.omit');
 export default class AuthController {
     static async signup(req, res){
         const { email, firstName, lastName, password, address } = req.body;
-        let jwtToken = Authenticate.signToken({email});
         let newUser = new User(firstName, lastName, email, password, address);
         let createdUser = await newUser.addUser();
+        let jwtToken = Authenticate.signToken({email});
         return res.status(201).json({
             status: 201,
             message: "User successfully created",

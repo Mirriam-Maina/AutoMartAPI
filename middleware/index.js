@@ -1,4 +1,4 @@
-import Authenticate from './authenticate';
+import Authenticate from './Authenticate';
 import AuthValidation from './AuthValidation';
 import CarsValidation from './CarsValidation';
 

@@ -1,5 +1,7 @@
 const Joi = require('joi');
 const pool = require('../database/config');
+import Authenticate from '../middleware/Authenticate';
+import ErrorHandler from '../helpers/errorHandler';
 
 
 const CarAdSchema = Joi.object().keys({
@@ -16,20 +18,24 @@ export default class CarAdValidation{
         const { registrationPlate, model, manufacturer, state, price} = req.body;
         const result = Joi.validate({registrationPlate, model, manufacturer, state, price}, CarAdSchema);
         if(result.error){
-            return res.status(400).json({
-                status: 400,
-                error: result.error.details[0].message,
-            })
+            ErrorHandler.errorResponse(res, 400, result.error.details[0].message)
         } 
         const carExistsQuery = `SELECT * FROM Cars where registrationPlate = $1`;
         const carExists = await pool.query(carExistsQuery, [registrationPlate]);
         if(carExists.rows.length > 0){
-            return res.status(409).json({
-                status: 409,
-                error: 'A car with that registration plate already exists',
-            })
+            ErrorHandler.errorResponse(res, 409, 'A car with that registration plate already exists');
         }
         next();
+    }; 
 
-    }
+    static async getAllCars (req, res, next){
+        const token = req.headers.authorization
+        || req.body.token
+        || req.query.token;
+
+        if(token){
+            await Authenticate.decodeToken(req, res, token)
+        }
+        next();
+    };
 }
