@@ -8,21 +8,45 @@ const CarControllerRouter = express.Router();
 CarControllerRouter.post(
     '/car',
     Authenticate.checkToken,
-    CarsValidation.createCar,
+    CarsValidation.createCarValidation,
     CarController.createCarAd
 )
 
 CarControllerRouter.get(
     '/car',
-    CarsValidation.getCarAuth,
+    CarsValidation.getCarAuthValidation,
     CarController.getAllCars
 )
 
 CarControllerRouter.get(
     '/car/:id',
-    CarsValidation.getCarAuth,
-    CarsValidation.getSingleCar,
+    CarsValidation.getCarAuthValidation,
+    CarsValidation.getSingleCarValidation,
     CarController.getSingleCar
+)
+
+CarControllerRouter.patch(
+    '/car/:id/status',
+    Authenticate.checkToken,
+    CarsValidation.getSingleCarValidation,
+    CarsValidation.carOwnerValidation,
+    CarController.updateCarStatus
+)
+
+CarControllerRouter.patch(
+    '/car/:id/price',
+    Authenticate.checkToken,
+    CarsValidation.getSingleCarValidation,
+    CarsValidation.carOwnerValidation,
+    CarController.updateCarPrice
+)
+
+CarControllerRouter.delete(
+    '/car/:id',
+    Authenticate.checkToken,
+    CarsValidation.getSingleCarValidation,
+    CarController.deleteCar
+
 )
 
 export default CarControllerRouter;

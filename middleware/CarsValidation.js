@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const pool = require('../database/config');
-import Authenticate from '../middleware/Authenticate';
+import Authenticate from './Authenticate';
 import ErrorHandler from '../helpers/errorHandler';
 
 
@@ -10,25 +10,33 @@ const CarAdSchema = Joi.object().keys({
     manufacturer: Joi.string().alphanum().min(3).max(30).required(),
     state: Joi.string().alphanum().min(3).max(30).required(),
     price: Joi.number().integer().required()
-})
+});
+
+const statusSchema = Joi.object().keys({
+    status: Joi.string().alphanum().min(3).max(30).required()
+});
+
+const priceSchema = Joi.object().keys({
+   newPriceOffered: Joi.number().integer().required()
+});
 
 export default class CarAdValidation{
 
-    static async createCar(req, res, next){
+    static async createCarValidation(req, res, next){
         const { registrationPlate, model, manufacturer, state, price} = req.body;
         const result = Joi.validate({registrationPlate, model, manufacturer, state, price}, CarAdSchema);
         if(result.error){
-            ErrorHandler.errorResponse(res, 400, result.error.details[0].message)
+            return ErrorHandler.errorResponse(res, 400, result.error.details[0].message)
         } 
         const carExistsQuery = `SELECT * FROM Cars where registrationPlate = $1`;
         const carExists = await pool.query(carExistsQuery, [registrationPlate]);
         if(carExists.rows.length > 0){
-            ErrorHandler.errorResponse(res, 409, 'A car with that registration plate already exists');
+           return ErrorHandler.errorResponse(res, 409, 'A car with that registration plate already exists');
         }
         next();
     }; 
 
-    static async getCarAuth (req, res, next){
+    static async getCarAuthValidation(req, res, next){
         const token = req.headers.authorization
         || req.body.token
         || req.query.token;
@@ -39,7 +47,7 @@ export default class CarAdValidation{
         next();
     };
 
-    static async getSingleCar(req, res, next){
+    static async getSingleCarValidation(req, res, next){
         const carId = req.params.id;
         if(isNaN(carId)){
            return ErrorHandler.errorResponse(res, 400, 'Type of ID must be an integer');
@@ -51,4 +59,28 @@ export default class CarAdValidation{
         }
         next();
     }
+
+    static async carOwnerValidation(req, res, next){
+        let result;
+        if(req.url.includes('status')) {
+            const  { status } = req.body
+            result = Joi.validate({status}, statusSchema);
+        }
+        else{
+            const { newPriceOffered } = req.body
+            result = Joi.validate({ newPriceOffered }, priceSchema);
+        }
+       if(result.error){
+           return ErrorHandler.errorResponse(res, 400, result.error.details[0].message)
+       }
+        const carId = req.params.id;
+        const user = req.user;
+        const carOwnerQuery = `SELECT * FROM Cars WHERE id = $1 and owner = $2`;
+        const carOwner = await pool.query(carOwnerQuery, [carId, user]);
+        if(carOwner.rows.length == 0){
+            return ErrorHandler.errorResponse(res, 401, 'You are not authorized to update this car');
+        }
+        next();
+    }
+
 }
