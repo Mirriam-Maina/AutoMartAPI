@@ -4,10 +4,10 @@
   "description": "A car sales API",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon './index.js' localhost 5000",
+    "start": "nodemon --exec babel-node src/app.js",
     "test": "npm test",
-    "create-tables": "node database/createtables.js",
-    "drop-tables": "node database/droptables.js"
+    "create-tables": "nodemon --exec babel-node src/database/createtables.js",
+    "drop-tables": "nodemon --exec babel-node src/database/droptables.js"
   },
   "repository": {
     "type": "git",
@@ -33,11 +33,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
+    "@babel/node": "^7.5.0",
     "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
     "@babel/register": "^7.4.4",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^8.0.6",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",

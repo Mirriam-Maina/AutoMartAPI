@@ -1,7 +1,7 @@
+import Joi from 'joi';
+import pool from '../database/config';
 import ErrorHandler from '../helpers/errorHandler';
 
-const Joi = require('joi');
-const pool = require('../database/config');
 
 const SignupSchema = Joi.object().keys(
     {
@@ -20,8 +20,8 @@ const SignInSchema = Joi.object().keys(
     }
 )
 
-export default class AuthValidation{
-    static async signUpValidation(req, res, next){
+const  AuthValidation = {
+    signUpValidation: async(req, res, next) => {
         const { firstName, lastName, email, address, password } = req.body;
         const result = Joi.validate({ firstName , lastName, email, address, password }, SignupSchema);
         if(result.error){
@@ -34,9 +34,9 @@ export default class AuthValidation{
         }
     
         next();
-    }
+    },
 
-    static async signInValidation(req,res, next){
+    signInValidation: async(req,res, next)=>{
         const { email, password } = req.body;
         const result = Joi.validate({email, password}, SignInSchema);
         if(result.error){
@@ -44,4 +44,6 @@ export default class AuthValidation{
         }    
         next();
     }
-}
+};
+
+export default AuthValidation;

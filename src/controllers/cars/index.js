@@ -45,6 +45,7 @@ CarControllerRouter.delete(
     '/car/:id',
     Authenticate.checkToken,
     CarsValidation.getSingleCarValidation,
+    CarsValidation.carOwnerValidation,
     CarController.deleteCar
 
 )

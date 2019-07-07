@@ -1,6 +1,7 @@
-const pool = require('./config');
+import pool from '../database/config';
 
-const createAll = `CREATE TABLE IF NOT EXISTS users(
+const createAll = `
+CREATE TABLE IF NOT EXISTS users(
     id SERIAL PRIMARY KEY,
     firstName VARCHAR(100) NOT NULL,
     lastName VARCHAR(100) NOT NULL,
@@ -9,6 +10,7 @@ const createAll = `CREATE TABLE IF NOT EXISTS users(
     address VARCHAR(100) NOT NULL,
     is_admin BOOLEAN NOT NULL DEFAULT false
   );
+  
 CREATE TABLE IF NOT EXISTS cars(
   id SERIAL PRIMARY KEY,
   registrationPlate VARCHAR(30) NOT NULL,
@@ -16,9 +18,10 @@ CREATE TABLE IF NOT EXISTS cars(
   manufacturer VARCHAR(20) NOT NULL,
   state VARCHAR(5) NOT NULL,
   price INT NOT NULL,
+  oldpriceoffered INT DEFAULT 0,
   status VARCHAR(20) NOT NULL DEFAULT 'available',
   owner VARCHAR REFERENCES users(email) ON DELETE CASCADE,
-  createdOn TIMESTAMP                    
+  createdOn TIMESTAMPTZ NOT NULL DEFAULT NOW()                   
 );
 
 CREATE TABLE IF NOT EXISTS orders(
@@ -35,5 +38,5 @@ pool.query(createAll)
 pool.end();
 })
 .catch((err) => {
-pool.end();
+console.log('An error occured', err);
 });
