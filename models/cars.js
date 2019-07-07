@@ -21,5 +21,11 @@ export default class Car{
         const allCars = await pool.query(allCarsQuery);
         return allCars.rows;
     }
+
+    static async getSingleCar(carId){
+        const singleCarQuery = `SELECT * FROM Cars where id=$1`;
+        const singleCar = await pool.query(singleCarQuery, [carId]);
+        return singleCar.rows;
+    }
 }
 

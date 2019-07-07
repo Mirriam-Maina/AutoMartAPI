@@ -23,6 +23,15 @@ export default class CarController{
             }
             ErrorHandler.successResponse(res, 200, 'Cars retrieved successfully', availableCars);
         }
+    };
 
-    }
+    static async getSingleCar(req, res){
+        const carId = req.params.id;
+        const isAdmin = await checkAdmin(req.user);
+        const singleCar = await Car.getSingleCar(carId);
+        if(!isAdmin && singleCar[0].status == 'sold'){
+            ErrorHandler.errorResponse(res, 401, 'You are not authorized to view this car');
+        }
+        ErrorHandler.successResponse(res, 200, 'Car retrieved successfully', singleCar);
+    };
 }
