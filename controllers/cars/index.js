@@ -14,8 +14,15 @@ CarControllerRouter.post(
 
 CarControllerRouter.get(
     '/car',
-    CarsValidation.getAllCars,
+    CarsValidation.getCarAuth,
     CarController.getAllCars
+)
+
+CarControllerRouter.get(
+    '/car/:id',
+    CarsValidation.getCarAuth,
+    CarsValidation.getSingleCar,
+    CarController.getSingleCar
 )
 
 export default CarControllerRouter;

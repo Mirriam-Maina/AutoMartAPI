@@ -28,7 +28,7 @@ export default class CarAdValidation{
         next();
     }; 
 
-    static async getAllCars (req, res, next){
+    static async getCarAuth (req, res, next){
         const token = req.headers.authorization
         || req.body.token
         || req.query.token;
@@ -38,4 +38,17 @@ export default class CarAdValidation{
         }
         next();
     };
+
+    static async getSingleCar(req, res, next){
+        const carId = req.params.id;
+        if(isNaN(carId)){
+           return ErrorHandler.errorResponse(res, 400, 'Type of ID must be an integer');
+        }
+        else{   
+            const carExistsQuery = `SELECT * FROM Cars where id = $1`;
+            const carExists = await pool.query(carExistsQuery, [carId]);
+            carExists.rows.length == 0 ? ErrorHandler.errorResponse(res, 404, 'Car with that id was not found') : null;
+        }
+        next();
+    }
 }

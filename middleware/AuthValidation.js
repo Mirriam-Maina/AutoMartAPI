@@ -1,3 +1,5 @@
+import ErrorHandler from '../helpers/errorHandler';
+
 const Joi = require('joi');
 const pool = require('../database/config');
 
@@ -23,20 +25,14 @@ export default class AuthValidation{
         const { firstName, lastName, email, address, password } = req.body;
         const result = Joi.validate({ firstName , lastName, email, address, password }, SignupSchema);
         if(result.error){
-            return res.status(400).json({
-                status: 400,
-                error: result.error.details[0].message,
-            })
+            return ErrorHandler.errorResponse(res, 400,result.error.details[0].message);
         } 
         let userExistsQuery = `SELECT * FROM Users where email = $1`;
         let userExists = await pool.query(userExistsQuery, [email]);
         if (userExists.rows.length > 0){
-            return res.status(409).json({
-                status: 409,
-                error: 'This user is already registered. Try logging in instead',
-            })
+            return ErrorHandler.errorResponse(res, 409, 'This user is already registered. Try logging in instead');
         }
-        
+    
         next();
     }
 
@@ -44,10 +40,7 @@ export default class AuthValidation{
         const { email, password } = req.body;
         const result = Joi.validate({email, password}, SignInSchema);
         if(result.error){
-            return res.status(400).json({
-                status: 400,
-                error: result.error.details[0].message,
-            })
+           return ErrorHandler.errorResponse(res, 400, result.error.details[0].message);
         }    
         next();
     }
