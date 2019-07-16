@@ -13,17 +13,21 @@ export default class Authenticate {
       return token;
     };
 
-    static async decodeToken(req, res, token){
+    static decodeToken(req, res, token, next){
       jwt.verify(token, process.env.APP_SECRET, async (error, decoded)=>{
         if(error){
-          ErrorHandler.errorResponse(res, 400, error.message);
+          return ErrorHandler.errorResponse(res, 400, error.message);
         }
         else{
           const user = decoded.data.email;
           const userExistsQuery = `SELECT * FROM Users where email = $1`;
           const userExists = await pool.query(userExistsQuery, [user]);
-          userExists.rows.length == 0 ? ErrorHandler.errorResponse(res, 400, 'This token is no longer valid') 
-          : req.user = user;
+          if(userExists.rows.length == 0) {
+             return ErrorHandler.errorResponse(res, 400, 'This token is no longer valid') }
+          else {
+            req.user = user;
+            next();
+             }
         };
       });
     };
@@ -32,11 +36,15 @@ export default class Authenticate {
         const token = req.headers.authorization
           || req.body.token
           || req.query.token;
-      
-          !token ? ErrorHandler.errorResponse(res, 401, 'Please provide a token') : await Authenticate.decodeToken(req, res, token);
-    next();
+          if(!token) {
+            return ErrorHandler.errorResponse(res, 401, 'Please provide a token')
+          }
+          else{ 
+              Authenticate.decodeToken(req, res, token, next);
+            }
+       
     };
-
+   
 };
 
   
