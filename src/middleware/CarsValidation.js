@@ -20,9 +20,9 @@ const priceSchema = Joi.object().keys({
    newPriceOffered: Joi.number().integer().required()
 });
 
-export default class CarAdValidation{
+const CarAdValidation = {
 
-    static async createCarValidation(req, res, next){
+   createCarValidation: async(req, res, next) => {
         const { registrationPlate, model, manufacturer, state, price} = req.body;
         const result = Joi.validate({registrationPlate, model, manufacturer, state, price}, CarAdSchema);
         if(result.error){
@@ -34,9 +34,9 @@ export default class CarAdValidation{
            return ErrorHandler.errorResponse(res, 409, 'A car with that registration plate already exists');
         }
         next();
-    }; 
+    },
 
-    static async getCarAuthValidation(req, res, next){
+   getCarAuthValidation: async(req, res, next)=> {
         const token = req.headers.authorization
         || req.body.token
         || req.query.token;
@@ -45,9 +45,9 @@ export default class CarAdValidation{
             await Authenticate.decodeToken(req, res, token)
         }
         next();
-    };
+    },
 
-    static async getSingleCarValidation(req, res, next){
+   getSingleCarValidation: async(req, res, next) => {
         const carId = req.params.id;
         if(isNaN(carId)){
            return ErrorHandler.errorResponse(res, 400, 'Type of ID must be an integer');
@@ -58,9 +58,9 @@ export default class CarAdValidation{
             carExists.rows.length == 0 ? ErrorHandler.errorResponse(res, 404, 'Car with that id was not found') : null;
         }
         next();
-    }
+    },
 
-    static async carOwnerValidation(req, res, next){
+carOwnerValidation: async(req, res, next) => {
         let result;
         if(req.url.includes('status')) {
             const  { status } = req.body
@@ -81,6 +81,8 @@ export default class CarAdValidation{
             return ErrorHandler.errorResponse(res, 401, 'You are not the owner of this car');
         }
         next();
-    }
+    },
 
-}
+};
+
+export default CarAdValidation;
