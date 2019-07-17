@@ -1,19 +1,19 @@
 import jwt from 'jsonwebtoken';
+import pool from '../database/config';
 import ErrorHandler from '../helpers/errorHandler';
 
-const pool = require('../database/config');
 require('dotenv').config();
 
-export default class Authenticate {
-    static signToken(payload){
+const Authenticate =  {
+ signToken: (payload) => {
       let token = jwt.sign({
           exp: Math.floor(Date.now() / 1000) + (60 * 60),
           data: payload
         }, process.env.APP_SECRET);
       return token;
-    };
+    },
 
-    static decodeToken(req, res, token, next){
+decodeToken: (req, res, token, next) => {
       jwt.verify(token, process.env.APP_SECRET, async (error, decoded)=>{
         if(error){
           return ErrorHandler.errorResponse(res, 400, error.message);
@@ -30,9 +30,9 @@ export default class Authenticate {
              }
         };
       });
-    };
+    },
 
-    static async checkToken(req, res, next){
+checkToken: (req, res, next) => {
         const token = req.headers.authorization
           || req.body.token
           || req.query.token;
@@ -43,8 +43,10 @@ export default class Authenticate {
               Authenticate.decodeToken(req, res, token, next);
             }
        
-    };
+    },
    
 };
+
+export default Authenticate;
 
   

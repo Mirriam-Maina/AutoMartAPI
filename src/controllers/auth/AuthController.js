@@ -1,8 +1,8 @@
+import omit from 'object.omit';
 import User from '../../models/auth';
 import middleware from '../../middleware';
 
 const { Authenticate } = middleware;
-const omit = require('object.omit');
 
 const AuthController  = {
     signup: async (req, res) => {
