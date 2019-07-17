@@ -66,11 +66,11 @@ export default class CarAdValidation{
             const  { status } = req.body
             result = Joi.validate({status}, statusSchema);
         }
-        else{
+        else if(req.url.includes('price')){
             const { newPriceOffered } = req.body
             result = Joi.validate({ newPriceOffered }, priceSchema);
         }
-       if(result.error){
+       if(result && result.error){
            return ErrorHandler.errorResponse(res, 400, result.error.details[0].message)
        }
         const carId = req.params.id;
@@ -78,7 +78,7 @@ export default class CarAdValidation{
         const carOwnerQuery = `SELECT * FROM Cars WHERE id = $1 and owner = $2`;
         const carOwner = await pool.query(carOwnerQuery, [carId, user]);
         if(carOwner.rows.length == 0){
-            return ErrorHandler.errorResponse(res, 401, 'You are not authorized to update this car');
+            return ErrorHandler.errorResponse(res, 401, 'You are not the owner of this car');
         }
         next();
     }

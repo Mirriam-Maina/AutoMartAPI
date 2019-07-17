@@ -1,4 +1,4 @@
-const pool = require('../database/config');
+import pool from '../database/config';
 
 export default class Car{
     constructor(registrationPlate, model, manufacturer, state, price, owner){

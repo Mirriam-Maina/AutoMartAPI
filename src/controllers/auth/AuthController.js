@@ -4,8 +4,8 @@ import middleware from '../../middleware';
 const { Authenticate } = middleware;
 const omit = require('object.omit');
 
-export default class AuthController {
-    static async signup(req, res){
+const AuthController  = {
+    signup: async (req, res) => {
         const { email, firstName, lastName, password, address } = req.body;
         let newUser = new User(firstName, lastName, email, password, address);
         let createdUser = await newUser.addUser();
@@ -16,9 +16,9 @@ export default class AuthController {
             data: omit(createdUser, 'password'),
             token: jwtToken
         })
-    }
+    },
 
-    static async signin(req, res){
+    signin: async(req, res) => {
         const { email, password } = req.body;
         let signInUser = await User.signInUser(email, password)
         let jwtToken = Authenticate.signToken({email});
@@ -38,4 +38,6 @@ export default class AuthController {
         }
     }
 }
+
+export default AuthController;
 
