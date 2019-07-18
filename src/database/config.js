@@ -1,4 +1,5 @@
-import Pool from 'pg';
+import { Pool } from 'pg';
+
 
 require('dotenv').config();
 
