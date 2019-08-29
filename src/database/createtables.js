@@ -1,6 +1,8 @@
 import pool from '../database/config';
 
-const createAll = `
+const createTables = () => {
+
+  const createAll = `
 CREATE TABLE IF NOT EXISTS users(
     id SERIAL PRIMARY KEY,
     firstName VARCHAR(100) NOT NULL,
@@ -35,8 +37,12 @@ CREATE TABLE IF NOT EXISTS orders(
 
 pool.query(createAll)
 .then((res) => {
-pool.end();
+console.log('Tables successfully created');
 })
 .catch((err) => {
-console.log('An error occured', err);
+console.log('An error occured while creating tables', err);
 });
+
+};
+
+export default createTables;

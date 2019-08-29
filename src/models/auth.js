@@ -1,5 +1,5 @@
-const pool = require('../database/config');
-const passwordHash = require('password-hash');
+import pool from '../database/config';
+import passwordHash from 'password-hash';
 
 class User{
     
